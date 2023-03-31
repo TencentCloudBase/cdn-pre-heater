@@ -1,0 +1,83 @@
+{
+  "version": "2.0",
+  "envId": "lowcode-1gxvnos61f22b18b",
+  "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
+  "functionRoot": "./functions",
+  "functions": [
+    {
+      "name": "cdn-pre-heater",
+      "timeout": 5,
+      "runtime": "Nodejs10.15",
+      "memorySize": 1024,
+      "triggers": [
+        { "name": "trigger", "type": "timer", "config": "0 */5 * * * * *" }
+      ],
+      "handler": "index.main"
+    }
+  ],
+  "framework": {
+    "name": "cdn-pre-heater",
+    "plugins": {
+      "function": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {}
+      }
+    },
+    "requirement": {
+      "environment": {
+        "WEDA_CUSTOM_DOMAIN": {
+          "description": "微搭应用自定义域名",
+          "required": true,
+          "default": "wecom.weda-wecom.com",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^(?!http|https)[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$",
+              "flag": "g"
+            },
+            "errorMessage": "数值范围3-9"
+          }
+        },
+        "WEDA_DEFAULT_DOMAIN": {
+          "description": "微搭应用默认域名，例如 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com          ",
+          "required": true,
+          "default": "lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^[a-zA-Z0-9.-]+.tcloudbaseapp.com$",
+              "flag": "g"
+            },
+            "errorMessage": ""
+          }
+        },
+        "WEDA_CAPP_IDS": {
+          "description": "微搭自定义应用 ID列表，用英文逗号隔开,例如 例如 app-jzaQSTEk,app-jzaQSTE1",
+          "required": true,
+          "default": "app-jzaQSTEk,app-jzaQSTE1",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$",
+              "flag": "g"
+            },
+            "errorMessage": "需要用逗号隔开, 同时需要满足格式要求,例如 app-jzaQSTEk,app-jzaQSTE1"
+          }
+        },
+        "WEDA_BAPP_IDS": {
+          "description": "微搭模型应用 ID 列表，用英文逗号隔开，例如 app-jzaQSTEk,app-jzaQSTE1",
+          "required": true,
+          "default": "app-jzaQSTEk,app-jzaQSTE1",
+          "validation": {
+            "rule": {
+              "type": "RegExp",
+              "pattern": "^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$",
+              "flag": "g"
+            },
+            "errorMessage": "需要用逗号隔开, 同时需要满足格式要求，例如 app-jzaQSTEk,app-jzaQSTE1"
+          }
+        }
+      }
+    }
+  }
+}
