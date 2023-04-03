@@ -4,33 +4,33 @@ const https = require("https");
  * @param {*} event
  * @returns
  * 通过环境变量输入以下内容
- * WEDA_CUSTOM_DOMAIN 微搭自定义域名
  * WEDA_DEFAULT_DOMAIN 微搭默认域名，例如lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com
- * WEDA_CAPP_IDS  自定义应用列表，格式为一个用,号隔开的appid列表
- * WEDA_BAPP_IDS 模型应用列表，格式为一个用,号隔开的appid列表
+ * WEDA_APP_IDS  自定义应用列表，格式为一个用,号隔开的appid列表
  */
 exports.main = async (event) => {
   const {
-    WEDA_CUSTOM_DOMAIN,
     WEDA_DEFAULT_DOMAIN,
-    WEDA_CAPP_IDS,
-    WEDA_BAPP_IDS,
+    WEDA_APP_IDS,
   } = process.env;
 
   console.log(
     "触发事件",
     Date.now(),
-    WEDA_CUSTOM_DOMAIN,
     WEDA_DEFAULT_DOMAIN,
-    WEDA_CAPP_IDS,
-    WEDA_BAPP_IDS
+    WEDA_APP_IDS
   );
 
+  if (!WEDA_DEFAULT_DOMAIN) {
+    return 
+  }
+
+  if (!WEDA_APP_IDS) {
+    return
+  }
+
   // 从 WEDA_DEFAULT_DOMAIN/${appId}/production/weda-manifest.json 拉取文件
-  const customAppUrls = getCustomAppUrl(WEDA_CAPP_IDS);
-  const modelAppUrls = getModelAppUrl(WEDA_BAPP_IDS);
-  console.log("CAPP URLs:", customAppUrls, modelAppUrls);
-  const preHeatUrls = [...customAppUrls, ...modelAppUrls];
+  const preHeatUrls = await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(','));
+  console.log("预热文件列表:", preHeatUrls);
 
   await preHeat(preHeatUrls);
 };
@@ -39,42 +39,31 @@ exports.main = async (event) => {
  * 预热cdn
  */
 async function preHeat(urls) {
-  return urls;
+  return Promise.all(urls.map(url => {
+    return fetchData(url)
+        .then(() => {
+            console.log('预热成功', url)
+        })
+        .catch(e => {
+            console.log(e.message, url)
+        })
+  }));
 }
 
 /**
- * 获取模型应用预热列表
+ * 获取应用预热列表
  * @returns
  */
-async function getModelAppUrl() {
+async function getPreHeatUrls(defaultDomain, appIds) {
   const urls = [];
-  for (const appId of WEDA_CAPP_IDS) {
-    const url = `${WEDA_DEFAULT_DOMAIN}/${appId}/production/weda-manifest.json`;
+  for (const appId of appIds) {
+    const url = `https://${defaultDomain}/${appId}/production/weda-manifest.json?v=${Date.now()}`;
     try {
-      const manifest = await fetchJson(url);
-      urls.push(...manifest.url);
-      console.log("模型应用", appId, "加入预热列表成功");
+      const manifest =  JSON.parse(await fetchData(url));
+      urls.push(...manifest.preHeatUrls);
+      console.log("应用", appId, "加入预热列表成功");
     } catch (e) {
-      console.log("模型应用", appId, "加入预热列表失败", e);
-    }
-  }
-  return urls;
-}
-
-/**
- * 获取自定义应用预热列表
- * @returns
- */
-async function getCustomAppUrl() {
-  const urls = [];
-  for (const appId of WEDA_CAPP_IDS) {
-    const url = `${WEDA_DEFAULT_DOMAIN}/${appId}/production/weda-manifest.json`;
-    try {
-      const manifest = await fetchJson(url);
-      urls.push(...manifest.url);
-      console.log("自定义应用", appId, "加入预热列表成功");
-    } catch (e) {
-      console.log("自定义应用", appId, "加入预热列表失败", e);
+      console.log("应用", appId, "加入预热列表失败", e);
     }
   }
   return urls;
@@ -85,7 +74,7 @@ async function getCustomAppUrl() {
  * @param {*} url
  * @returns
  */
-function fetchJson(url) {
+function fetchData(url) {
   return new Promise((resolve, reject) => {
     https
       .get(url, (res) => {
@@ -95,8 +84,7 @@ function fetchJson(url) {
         });
         res.on("end", () => {
           try {
-            const json = JSON.parse(data);
-            resolve(json);
+            resolve(data);
           } catch (error) {
             reject(error);
           }
