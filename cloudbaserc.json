@@ -6,7 +6,7 @@
   "functions": [
     {
       "name": "cdn-pre-heater",
-      "timeout": 5,
+      "timeout": 30,
       "runtime": "Nodejs10.15",
       "memorySize": 1024,
       "triggers": [
@@ -48,8 +48,20 @@
               "pattern": "(^$)|(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$)",
               "flag": "g"
             },
-            "errorMessage": "需要用逗号隔开, 同时需要满足格式要求,例如 app-jzaQSTEk,app-jzaQSTE1"
+            "errorMessage": "需要用英文逗号隔开, 同时需要满足格式要求,例如 app-jzaQSTEk,app-jzaQSTE1"
           }
+        },
+        "SECRET_ID": {
+          "description": "子账号 SECRETID，需要有cdn的接口权限",
+          "required": true
+        },
+        "SECRET_KEY": {
+          "description": "子账号 SECRETKEY，需要有cdn的接口权限",
+          "required": true
+        },
+        "OTHER_URL": {
+          "description": "其他需要预热的cdn地址，用英文逗号隔开",
+          "required": false
         }
       }
     }
