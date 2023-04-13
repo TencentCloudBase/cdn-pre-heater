@@ -9,8 +9,13 @@ const { CloudApiService } = require("@cloudbase/cloud-api");
  * WEDA_APP_IDS  自定义应用列表，格式为一个用,号隔开的appid列表
  */
 exports.main = async (event) => {
-  const { WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS, SECRET_ID, SECRET_KEY, OTHER_URLS = '' } =
-    process.env;
+  const {
+    WEDA_DEFAULT_DOMAIN,
+    WEDA_APP_IDS,
+    SECRET_ID,
+    SECRET_KEY,
+    OTHER_URLS = "",
+  } = process.env;
 
   if (!SECRET_ID || !SECRET_KEY) {
     throw new Error("请提供子账号 API 访问密钥，需要有 CDN 访问权限");
@@ -26,8 +31,7 @@ exports.main = async (event) => {
     throw new Error("请提供需要预热的微搭 APP ID，用英文逗号隔开");
   }
 
-  let preHeatUrls = OTHER_URLS.split(',')
-
+  let preHeatUrls = OTHER_URLS.split(",");
 
   const cdnService = new CloudApiService({
     service: "cdn",
@@ -41,10 +45,9 @@ exports.main = async (event) => {
   console.log("定时预热", Date.now(), WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS);
 
   // 从 WEDA_DEFAULT_DOMAIN/${appId}/production/weda-manifest.json 拉取文件
-  preHeatUrls = preHeatUrls.concat(await getPreHeatUrls(
-    WEDA_DEFAULT_DOMAIN,
-    WEDA_APP_IDS.split(",")
-  ));
+  preHeatUrls = preHeatUrls.concat(
+    await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(","))
+  );
   console.log("预热文件列表:", preHeatUrls);
 
   // const purgeResult = await cdnService.request("TcbPurge", {
@@ -56,7 +59,7 @@ exports.main = async (event) => {
   // await sleep(5000);
 
   const preHeatResult = await cdnService.request("PushUrlsCache", {
-    Urls: preHeatUrls
+    Urls: preHeatUrls,
   });
 
   console.log("调用预热成功", preHeatResult);
