@@ -31,7 +31,7 @@ exports.main = async (event) => {
     throw new Error("请提供需要预热的微搭 APP ID，用英文逗号隔开");
   }
 
-  let preHeatUrls = OTHER_URLS.split(",");
+  let preHeatUrls = OTHER_URLS ? OTHER_URLS.split(",") : [];
 
   const cdnService = new CloudApiService({
     service: "cdn",
