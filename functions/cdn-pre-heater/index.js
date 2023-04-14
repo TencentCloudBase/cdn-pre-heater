@@ -40,6 +40,7 @@ exports.main = async (event) => {
         Urls: preHeatUrls,
       });
       console.log(WEDA_DEFAULT_DOMAIN, "调用预热成功", preHeatResult);
+      return preHeatResult
     })
   );
 };
