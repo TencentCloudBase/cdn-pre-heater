@@ -7,19 +7,16 @@ const { CloudApiService } = require("@cloudbase/cloud-api");
  * 通过环境变量输入以下内容
  * PRE_HEAT_CONFIG 格式如下
  * `
- * ${defaultDomain1}/${appId1,${appId2}
- * ${defaultDomain2}/${appId1},${appId2}
+ * ${defaultDomain1}/${appId1,${appId2};${defaultDomain2}/${appId1},${appId2}
  * `
  * ``
  */
 exports.main = async (event) => {
   const { PRE_HEAT_CONFIG, SECRET_ID, SECRET_KEY } = process.env;
+  const pattern = /^[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*))*$/;
 
-  if (!PRE_HEAT_CONFIG) {
-    throw new Error(`请先设置 PRE_HEAT_CONFIG 环境变量，格式为
-defaultDomain1/appId1,appId2
-defaultDomain2/appId1,appId2
-多环境用换行符隔开
+  if (!pattern.test(PRE_HEAT_CONFIG)) {
+    throw new Error(`请先设置 PRE_HEAT_CONFIG 环境变量，格式为 defaultDomain1/appId1,appId2;defaultDomain2/appId1,appId2 多个规则用分号隔开
     `);
   }
 
