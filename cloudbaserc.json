@@ -25,30 +25,17 @@
     },
     "requirement": {
       "environment": {
-        "WEDA_DEFAULT_DOMAIN": {
-          "description": "微搭应用默认域名，例如 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com          ",
-          "required": true,
-          "default": "lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com",
+        "PRE_HEAT_CONFIG": {
+          "description": "预热配置,参考配置 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1 多个环境的配置用英文分号隔开",
+          "required": false,
+          "default": "lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1",
           "validation": {
             "rule": {
               "type": "RegExp",
-              "pattern": "^[a-zA-Z0-9.-]+.tcloudbaseapp.com$",
+              "pattern": "^[a-zA-Z0-9.-]+.tcloudbaseapp.com/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$))*$",
               "flag": "g"
             },
-            "errorMessage": "域名格式不正确"
-          }
-        },
-        "WEDA_APP_IDS": {
-          "description": "微搭应用 ID列表，用英文逗号隔开,例如 例如 app-jzaQSTEk,app-jzaQSTE1",
-          "required": true,
-          "default": "app-jzaQSTEk,app-jzaQSTE1",
-          "validation": {
-            "rule": {
-              "type": "RegExp",
-              "pattern": "(^$)|(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$)",
-              "flag": "g"
-            },
-            "errorMessage": "需要用英文逗号隔开, 同时需要满足格式要求,例如 app-jzaQSTEk,app-jzaQSTE1"
+            "errorMessage": "预热配置格式不正确，参考配置 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1 "
           }
         },
         "SECRET_ID": {
@@ -58,10 +45,6 @@
         "SECRET_KEY": {
           "description": "子账号 SECRETKEY，需要有cdn的接口权限",
           "required": true
-        },
-        "OTHER_URL": {
-          "description": "其他需要预热的cdn地址，用英文逗号隔开",
-          "required": false
         }
       }
     }

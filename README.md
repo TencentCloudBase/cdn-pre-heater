@@ -20,7 +20,7 @@
 
 点击下方按钮使用 [CloudBase Framework](https://github.com/TencentCloudBase/cloudbase-framework) 可以在云端一键部署本项目到自己的云开发账号上。
 
-[![](https://main.qcloudimg.com/raw/67f5a389f1ac6f3b4d04c7256438e44f.svg)](https://console.cloud.tencent.com/tcb/env/index?action=CreateAndDeployCloudBaseProject&appUrl=https%3A%2F%2Fgithub.com%2FTencentCloudBase%2Fcdn-pre-heater&branch=main)
+[![](https://main.qcloudimg.com/raw/67f5a389f1ac6f3b4d04c7256438e44f.svg)](https://console.cloud.tencent.com/tcb/env/index?action=CreateAndDeployCloudBaseProject&appUrl=https%3A%2F%2Fgithub.com%2FTencentCloudBase%2Fcdn-pre-heater&branch=master)
 
 可以选择一个按量计费的云开发环境进行部署，在配置时，按照说明进行配置
 
@@ -55,16 +55,14 @@ tcb framework deploy -e xxxxx
 
 ### 环境变量
 
-- WEDA_DEFAULT_DOMAIN
-  - 微搭应用默认域名，例如 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com
-- WEDA_APP_IDS
-  - 微搭应用 ID 列表，用英文逗号隔开,例如 例如 app-jzaQSTEk,app-jzaQSTE1
+- PRE_HEAT_CONFIG
+  - 预热配置 格式为 defaultDomain1/appId1,appId2;defaultDomain2/appId1,appId2
+  - 参考配置 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1
+  - 如果有多个环境，配置用英文分号隔开，例如 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1;lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1
 - SECRET_ID
   - 子账号 SECRETID，需要有 cdn 的接口权限
 - SECRET_KEY
   - 子账号 SECRETKEY，需要有 cdn 的接口权限
-- OTHER_URL
-  - 其他需要预热的 cdn 地址，需要是完整的 url 格式，用英文逗号隔开
 
 ### 定时触发配置
 
