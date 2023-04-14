@@ -34,7 +34,7 @@ exports.main = async (event) => {
       if (!config) return;
       let preHeatUrls = [];
       const [WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS] = config.split("/");
-      await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(","));
+      preHeatUrls = await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(","));
       console.log(WEDA_DEFAULT_DOMAIN, "预热文件数量:", preHeatUrls.length);
       const preHeatResult = await cdnService.request("PushUrlsCache", {
         Urls: preHeatUrls,
