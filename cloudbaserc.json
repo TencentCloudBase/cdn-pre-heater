@@ -32,7 +32,7 @@
           "validation": {
             "rule": {
               "type": "RegExp",
-              "pattern": "^[a-zA-Z0-9.-]+.tcloudbaseapp.com/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$))*$",
+              "pattern": "^[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(^app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*$))*$",
               "flag": "g"
             },
             "errorMessage": "预热配置格式不正确，参考配置 lowcode-1gxvnos61f22b18b-1311711383.tcloudbaseapp.com/app-jzaQSTEk,app-jzaQSTE1 "
