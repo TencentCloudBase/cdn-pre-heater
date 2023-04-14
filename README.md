@@ -24,7 +24,7 @@
 
 可以选择一个按量计费的云开发环境进行部署，在配置时，按照说明进行配置
 
-![](https://raw.githubusercontent.com/binggg/storage/main/cdn202304131334232.png)
+![](https://raw.githubusercontent.com/binggg/storage/main/cdn202304141200820.png)
 
 如果没有按量计费的云开发环境，可以在本地进行部署
 
@@ -51,7 +51,7 @@ tcb framework deploy -e xxxxx
 
 部署成功后，后续如果需要添加预热应用/修改预热频率，可以在云开发/云函数中找到 cdn-pre-heater 函数，编辑云函数进行配置
 
-![](https://raw.githubusercontent.com/binggg/storage/main/cdn202304131336529.png)
+![](https://raw.githubusercontent.com/binggg/storage/main/cdn202304141201584.png)
 
 ### 环境变量
 
