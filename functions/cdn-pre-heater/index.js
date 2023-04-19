@@ -1,5 +1,6 @@
 const https = require("https");
 const { CloudApiService } = require("@cloudbase/cloud-api");
+const MAX_URLS = 500;
 /**
  *
  * @param {*} event
@@ -36,20 +37,27 @@ exports.main = async (event) => {
       const [WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS] = config.split("/");
       preHeatUrls = await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(","));
       console.log(WEDA_DEFAULT_DOMAIN, "预热文件数量:", preHeatUrls.length);
-      const preHeatResult = await cdnService.request("PushUrlsCache", {
-        Urls: preHeatUrls,
-      });
-      console.log(WEDA_DEFAULT_DOMAIN, "调用预热成功", preHeatResult);
-      return preHeatResult
+      
+      // 按照 CDN 限制切分
+      const urlChunks = chunkArray(preHeatUrls, MAX_URLS);
+      return Promise.all(urlChunks.map(async urls => {
+        const preHeatResult = await cdnService.request("PushUrlsCache", {
+            Urls: urls,
+          });
+          console.log(WEDA_DEFAULT_DOMAIN, "调用预热成功", preHeatResult);
+          return preHeatResult
+      }))
     })
   );
 };
 
-async function sleep(time = 3000) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time);
-  });
-}
+function chunkArray(arr, size) {
+    const result = [];
+    for (let i = 0; i < arr.length; i += size) {
+      result.push(arr.slice(i, i + size));
+    }
+    return result;
+  }
 
 /**
  * 获取应用预热列表
