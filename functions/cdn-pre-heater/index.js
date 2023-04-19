@@ -14,7 +14,8 @@ const MAX_URLS = 500;
  */
 exports.main = async (event) => {
   const { PRE_HEAT_CONFIG, SECRET_ID, SECRET_KEY } = process.env;
-  const pattern = /^[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*))*$/;
+  const pattern =
+    /^[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*)(;[a-zA-Z0-9.-]+.tcloudbaseapp.com\/(app-[a-zA-Z0-9-]+(,app-[a-zA-Z0-9-]+)*))*$/;
 
   if (!pattern.test(PRE_HEAT_CONFIG)) {
     throw new Error(`请先设置 PRE_HEAT_CONFIG 环境变量，格式为 defaultDomain1/appId1,appId2;defaultDomain2/appId1,appId2 多个规则用分号隔开
@@ -35,29 +36,34 @@ exports.main = async (event) => {
       if (!config) return;
       let preHeatUrls = [];
       const [WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS] = config.split("/");
-      preHeatUrls = await getPreHeatUrls(WEDA_DEFAULT_DOMAIN, WEDA_APP_IDS.split(","));
+      preHeatUrls = await getPreHeatUrls(
+        WEDA_DEFAULT_DOMAIN,
+        WEDA_APP_IDS.split(",")
+      );
       console.log(WEDA_DEFAULT_DOMAIN, "预热文件数量:", preHeatUrls.length);
-      
+
       // 按照 CDN 限制切分
       const urlChunks = chunkArray(preHeatUrls, MAX_URLS);
-      return Promise.all(urlChunks.map(async urls => {
-        const preHeatResult = await cdnService.request("PushUrlsCache", {
+      return Promise.all(
+        urlChunks.map(async (urls) => {
+          const preHeatResult = await cdnService.request("PushUrlsCache", {
             Urls: urls,
           });
           console.log(WEDA_DEFAULT_DOMAIN, "调用预热成功", preHeatResult);
-          return preHeatResult
-      }))
+          return preHeatResult;
+        })
+      );
     })
   );
 };
 
 function chunkArray(arr, size) {
-    const result = [];
-    for (let i = 0; i < arr.length; i += size) {
-      result.push(arr.slice(i, i + size));
-    }
-    return result;
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
   }
+  return result;
+}
 
 /**
  * 获取应用预热列表
